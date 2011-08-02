@@ -22,13 +22,56 @@
  */
 
 /**
+ * 
+ * This interface should be implemented by the session entity in your project. The session
+ * entity is where all session data will be stored in (proberly) in a database. Implementing
+ * these function will cause that the Pike_Session_SaveHandler_Doctrine knows how to talk with
+ * Doctrine.
+ * 
  * Session entity interface
  */
-interface Pike_Session_Entity_Interface {
-    public function getData();
-    public function setdata($data);
-    public function setModified(DateTime $date);
-    public function getModified();
-    public static function getModifiedFieldName();
-    public function setId($id);
+interface Pike_Session_Entity_Interface
+{
+
+  /**
+   * Function which should retrieve the serialized session data. Do not serialize yourself!
+   * This is done by the PHP session handler itself.
+   * 
+   * @return string
+   */
+  public function getData();
+
+  /**
+   * The function where the savehandler can set the serialized data to
+   * 
+   * @param string $data
+   */
+  public function setdata($data);
+
+  /**
+   * Function where the savehandler can set the last modified data thru. 
+   * 
+   * @param DateTime $date
+   */
+  public function setModified(DateTime $date);
+
+  /**
+   * Function to retrieve the last date modified
+   * 
+   * @return DateTime|String
+   */
+  public function getModified();
+
+  /**
+   * Retrieve the fieldname of the corresponding field where the modificationdate
+   * of the session is stored. Is used for the garbage collector.
+   */
+  public static function getModifiedFieldName();
+
+  /**
+   * Function to set the session id
+   * 
+   * @param string $id
+   */
+  public function setId($id);
 }
