@@ -1,0 +1,13 @@
+#summary Get more to know about Doctrine ZF session savehandler
+#labels Featured
+
+= What can I do with Pike_Session_SaveHandler_Doctrine? =
+
+Normally PHP sessions are stored as files in your linux or Windows file system. For a lot of projects this is fine. You can modify the session save_path to seperate the session files for proberly security reasons.
+
+With bigger our complex projects where things as load balancing are neccasary saving the session is not that simple anymore. You could use memcache offcourse but a other approach is to save your sessions in the database. This is were Pike_Session_SaveHandler_Doctrine should take your intrest.
+
+Are you like us using Zend Framework and Doctrine 2 integrated together? And do you want to store your sessions in the database without using the Zend_Session_SaveHandler_dbTable class which requires extra seperate configuration? Then take a look at this!
+
+== What do you need to do? ==
+From this place my friend Pieter has to do his work!
