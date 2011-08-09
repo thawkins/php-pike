@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (C) 2011 by Pieter Vogelaar (Platina Designs) and Kees Schepers (SkyConcepts)
  *
