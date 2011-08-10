@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2011 by Pieter Vogelaar (Platina Designs) and Kees Schepers (SkyConcepts)
+ * Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @category   PiKe
+ * @copyright  Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)
+ * @license    MIT
  */
 
 /**
@@ -39,25 +43,23 @@
  *
  * And you can enjoy Doctrine even more!
  *
- * @version 1.0Beta
- * @author  Kees Schepers   <kees@skyconcepts.nl>
- * @author  Pieter Vogelaar <ps.vogelaar@platinadesigns.nl>
+ * @category   PiKe
+ * @copyright  Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)
+ * @license    MIT
  */
 class Pike_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_Interface
 {
-
     /**
-     *
      * @var Doctrine\ORM\EntityManager
      */
     protected static $em;
 
-    /*
+    /**
      * @var string
      */
     protected $_entityName = 'session';
+
     /**
-     *
      * Lifetime of your session
      *
      * @var integer
@@ -95,7 +97,6 @@ class Pike_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_Inte
     }
 
     /**
-     *
      * Set the EntityManager for Doctrine communication
      *
      * @param Doctrine\ORM\EntityManager $em
@@ -106,6 +107,7 @@ class Pike_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_Inte
     }
 
     /**
+     * Returns the Session entity
      *
      * @param  string $id
      * @return Pike_Session_Entity_Interface
@@ -118,7 +120,7 @@ class Pike_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_Inte
     public function open($save_path, $name)
     {
         if (!self::$em instanceof Doctrine\ORM\EntityManager) {
-            throw new Zend_Session_SaveHandler_Exception('Doctrine entitymananger must me set');
+            throw new Zend_Session_SaveHandler_Exception('Doctrine EntityMananger must be set');
         }
 
         return true;
@@ -208,12 +210,12 @@ class Pike_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_Inte
     }
 
     /**
+     * Garbage collector
      *
      * @param type $maxlifetime given by php ini setting gc_maxlifetime
      */
     public function gc($maxlifetime)
     {
-
         $expired = new DateTime('- ' . $maxlifetime . ' seconds');
         $entityName = $this->_entityName;
         $fieldName = $entityName::getModifiedFieldName();
@@ -228,5 +230,4 @@ class Pike_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_Inte
 
         return true;
     }
-
 }

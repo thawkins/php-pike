@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2011 by Pieter Vogelaar (Platina Designs) and Kees Schepers (SkyConcepts)
+ * Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,59 +19,53 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ *
+ * @category   PiKe
+ * @copyright  Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)
+ * @license    MIT
  */
 
 /**
- * 
- * This interface should be implemented by the session entity in your project. The session
- * entity is where all session data will be stored in (proberly) in a database. Implementing
- * these function will cause that the Pike_Session_SaveHandler_Doctrine knows how to talk with
- * Doctrine.
- * 
  * Session entity interface
+ *
+ * @category   PiKe
+ * @copyright  Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)
+ * @license    MIT
  */
-interface Pike_Session_Entity_Interface
-{
+interface Pike_Session_Entity_Interface {
+    public function getData();
 
-  /**
-   * Function which should retrieve the serialized session data. Do not serialize yourself!
-   * This is done by the PHP session handler itself.
-   * 
-   * @return string
-   */
-  public function getData();
+    /**
+     * The function where the savehandler can set the serialized data to
+     * 
+     * @param string $data
+     */
+    public function setdata($data);
 
-  /**
-   * The function where the savehandler can set the serialized data to
-   * 
-   * @param string $data
-   */
-  public function setdata($data);
+    /**
+     * Function where the savehandler can set the last modified data thru. 
+     * 
+     * @param DateTime $date
+     */
+    public function setModified(DateTime $date);
 
-  /**
-   * Function where the savehandler can set the last modified data thru. 
-   * 
-   * @param DateTime $date
-   */
-  public function setModified(DateTime $date);
+    /**
+     * Function to retrieve the last date modified
+     * 
+     * @return DateTime|String
+     */
+    public function getModified();
 
-  /**
-   * Function to retrieve the last date modified
-   * 
-   * @return DateTime|String
-   */
-  public function getModified();
+    /**
+     * Retrieve the fieldname of the corresponding field where the modificationdate
+     * of the session is stored. Is used for the garbage collector.
+     */
+    public static function getModifiedFieldName();
 
-  /**
-   * Retrieve the fieldname of the corresponding field where the modificationdate
-   * of the session is stored. Is used for the garbage collector.
-   */
-  public static function getModifiedFieldName();
-
-  /**
-   * Function to set the session id
-   * 
-   * @param string $id
-   */
-  public function setId($id);
+    /**
+     * Function to set the session id
+     * 
+     * @param string $id
+     */
+    public function setId($id);
 }
