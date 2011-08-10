@@ -21,12 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 use DoctrineExtensions\Paginate\Paginate;
 
 /**
- * Description of Doctrine
+ * Datasource for Doctrine queries and entities. You can use this datasource with
+ * Pike_Grid which will both create all neccasary javascript and JSON for drawing
+ * a grid with JQgrid.
+ * 
+ * Dependecies: JQuery, jqGrid, Doctrine, DoctrineExtensions, Zend Framework
  *
- * @author kees
  */
 class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
 {
@@ -36,12 +40,13 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
     protected $query;
 
     protected $params = array();
+    protected $limitPerPage = 50;
+    
     public function __construct(Doctrine\ORM\QueryBuilder $query)
     {
         $this->data = $query->getQuery()->getArrayResult();
         $this->query = $query->getQuery();
 
-//        var_dump($query->getDQLPart('select'));
     }
 
     public function getColumns()
@@ -71,19 +76,28 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
         $this->params = $params;
     }
     
+    public function setResultsPerPage($num) {
+        $this->limitPerPage = $num;
+    }
+    
+    /**
+     *
+     * Returns a JSON string useable for JQuery Grid. This grids interprets this
+     * data and is able to draw a grid.
+     * 
+     * @return string JSON data
+     */
     public function getJSON()
-    {
-        $limitPerPage = 5;
-        $offset = $limitPerPage * ($this->params['page'] - 1);
+    {        
+        $offset = $this->limitPerPage * ($this->params['page'] - 1);
 
         $count = Paginate::getTotalQueryResults($this->query);
-        $paginateQuery = Paginate::getPaginateQuery($this->query, $offset, $limitPerPage);
+        $paginateQuery = Paginate::getPaginateQuery($this->query, $offset, $this->limitPerPage);        
         $result = $paginateQuery->getResult();
-        
         
         $data = array();
         $data['page'] = (int)$this->params['page'];
-        $data['total'] = floor($count / $limitPerPage);
+        $data['total'] = ceil($count / $this->limitPerPage);
         $data['records'] = $count;
         $data['rows'] = array();
         
