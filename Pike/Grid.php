@@ -79,6 +79,7 @@ class Pike_Grid {
     }
 
     public function setRowsPerPage($amount) {
+        $this->datasource->setResultsPerPage($amount);
         $this->recordsPerPage = $amount;
         
         return $this;
@@ -119,8 +120,7 @@ class Pike_Grid {
             'rowNum'        => $this->recordsPerPage,
             'autoWidth'     => true,
             'pager'         => $this->pagerid,
-            'height'        => $this->height,
-            'width'         => $this->width,
+            'height'        => $this->height,            
             'viewrecords'   => true,            
             'colModel'      => array_values($this->columns),
         );
@@ -136,6 +136,15 @@ class Pike_Grid {
 
         if (!is_null($this->caption)) {
             $settings['caption'] = $this->caption;
+        }
+        
+        switch($this->width) {
+            case 'auto' :
+                $settings['autowidth'] = true;
+                break;
+            default : //width in pixels?
+                $settings['width'] = (int)$this->width;
+                break;
         }
 
         $output = '$("#' . $this->id . '").jqGrid(' . json_encode($settings) . ');';
