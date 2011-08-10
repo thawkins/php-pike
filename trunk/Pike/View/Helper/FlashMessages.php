@@ -147,10 +147,10 @@ class Pike_View_Helper_FlashMessages extends Zend_View_Helper_Abstract
      */
     protected function _translate($string)
     {
-        if ($translator instanceof Zend_Translator) {
-            return $translator->_($string);
+        if ($this->_translator instanceof Zend_Translator) {
+            return $this->_translator->_($string);
         } else {
-            return $translator->_($string);
+            return $string;
         }
     }
 }
