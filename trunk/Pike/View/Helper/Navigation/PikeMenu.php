@@ -47,7 +47,9 @@
  *
  * And make sure u use PikeMenu either in your view (layout script proberly)
  *
- * <?= $this->navigation()->PikeMenu(); ?>
+ * <code>
+ * echo $this->navigation()->PikeMenu();
+ * </code>
  *
  * Next make sure the Pike library is loaded with autoloaderNamespaces[] = "Pike"  in your
  * application.ini. And beyond to make sure the view navigation helper is found add something like
