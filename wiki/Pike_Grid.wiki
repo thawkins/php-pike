@@ -63,7 +63,7 @@ Pike_Grid is not finished yet, but atleast it's working! Still some features hav
 
 Work needs to be done:
   * Add support for passing EntityRepositories
-  * More grid customalisation options (multiselect, etc)
+  * More grid customalisation options (multiselect, editable, etc)
   * Possibillity to set cache lifetime of datasource data
   * Easier integration in a Zend Framework application
   * Dynamic field support
