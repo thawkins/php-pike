@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (C) 2011 by Pieter Vogelaar (Platina Designs) and Kees Schepers (SkyConcepts)
  *
@@ -22,8 +21,6 @@
  * THE SOFTWARE.
  */
 
-use DoctrineExtensions\Paginate\Paginate;
-
 /**
  * Datasource for Doctrine queries and entities. You can use this datasource with
  * Pike_Grid which will both create all neccasary javascript and JSON for drawing
@@ -42,26 +39,73 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
     protected $params = array();
     protected $limitPerPage = 50;
     
-    public function __construct(Doctrine\ORM\QueryBuilder $query)
+    public function __construct($source)
     {
-        $this->data = $query->getQuery()->getArrayResult();
-        $this->query = $query->getQuery();
+        switch($source) {
+            case ($source instanceof Doctrine\ORM\QueryBuilder) :
+                $this->query = $source->getQuery();
+                break;
+            case ($source instanceof Doctrine\ORM\Query) :
+                 $this->query = $source;
+                break;
+            case ($source instanceof \Doctrine\ORM\EntityRepository) :
+                $this->query = $source->createQueryBuilder('al')->getQuery();
+                break;
+        }
+                
+        /**
+         * Data is used for the column names so using a metamapper would be better.
+         */
+        $query = clone $this->query;        
+        $this->data = $query->getArrayResult();
 
     }
 
+    /**
+     *
+     * Looks up in the AST what select expression we use and analyses which
+     * fields are used. This is passed thru the datagrid for displaying fieldnames.
+     * The array returned is a jqGrid compattible array.
+     * 
+     * @return array
+     */
     public function getColumns()
     {
-        if (count($this->columns) == 0) {
-            $names = array_keys($this->data[0]);
-            $this->columns = array();
-
-            foreach ($names as $name)
-                $this->columns[$name] = array('name' => $name, 'label' => $name);
+        $selectClause = $this->query->getAST()->selectClause;
+        if(count($selectClause->selectExpressions) == 0) {
+            throw new Pike_Exception('The grid query should contain at least one column, none found.');
+        }
+        
+        $this->columns = array();
+                
+        /* @var $selExpr Doctrine\ORM\Query\AST\SelectExpression */
+        foreach($selectClause->selectExpressions as $selExpr) {
+            
+            /* @var $expr Doctrine\ORM\Query\AST\PathExpression */
+            $expr = $selExpr->expression;
+            
+            $alias = $expr->identificationVariable;
+            $name = $expr->field;
+            $label = ($selExpr->fieldIdentificationVariable === null) ? $name : $selExpr->fieldIdentificationVariable;
+            
+            $this->columns[$name] = array(
+                'name' => $name, 
+                'label' => $label, 
+                'index' => (strlen($alias) > 0 ? ($alias . '.') : '') . $name
+            );
+            
         }
 
         return $this->columns;
     }
 
+    /**
+     *
+     * Test if the grid/source has given columnname
+     * 
+     * @param string $name column name
+     * @return boolean
+     */
     public function hasColumn($name)
     {
         return array_key_exists($name, $this->columns);
@@ -90,11 +134,43 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
     public function getJSON()
     {        
         $offset = $this->limitPerPage * ($this->params['page'] - 1);
+        $hints = array();
 
-        $count = Paginate::getTotalQueryResults($this->query);
-        $paginateQuery = Paginate::getPaginateQuery($this->query, $offset, $this->limitPerPage);        
-        $result = $paginateQuery->getResult();
+        $count = Pike_Grid_Datasource_Doctrine_Paginate::getTotalQueryResults($this->query);        
         
+        /**
+         * Sorting if defined
+         */
+        if(array_key_exists('sidx', $this->params) && strlen($this->params['sidx']) > 0) {
+            $columns = $this->columns;
+            $sidx = $this->params['sidx'];
+            $sord = (in_array(strtoupper($this->params['sord']), array('ASC','DESC')) ? strtoupper($this->params['sord']) : 'ASC');
+            
+            //test if searchindex really is defined. (security)
+            $hasSidx = function() use($columns, $sidx) {
+              foreach($columns as $column) {
+                  if($columns['index'] == $sidx) return true;
+              }
+              
+              return false;
+            };
+            
+            if($hasSidx) {
+                $hints[\Doctrine\ORM\Query::HINT_CUSTOM_TREE_WALKERS] = array('Pike_Grid_Datasource_Doctrine_OrderByWalker');
+                $hints['sidx'] =  $sidx;
+                $hints['sord'] = $sord;
+            }
+        }        
+        
+        $paginateQuery = Pike_Grid_Datasource_Doctrine_Paginate::getPaginateQuery(
+                $this->query,
+                $offset,
+                $this->limitPerPage,
+                $hints
+        );
+        
+        $result = $paginateQuery->getResult();
+
         $data = array();
         $data['page'] = (int)$this->params['page'];
         $data['total'] = ceil($count / $this->limitPerPage);
