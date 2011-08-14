@@ -52,12 +52,12 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
                 $this->query = $source->createQueryBuilder('al')->getQuery();
                 break;
         }
-                
+             
+
         /**
          * Data is used for the column names so using a metamapper would be better.
          */
         $query = clone $this->query;        
-        $this->data = $query->getArrayResult();
 
     }
 
@@ -66,6 +66,9 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
      * Looks up in the AST what select expression we use and analyses which
      * fields are used. This is passed thru the datagrid for displaying fieldnames.
      * The array returned is a jqGrid compattible array.
+     * 
+     * @todo somehow we need to fix if query is a repository to expand all fields
+     * a good example would be the zfgrid.
      * 
      * @return array
      */
@@ -77,10 +80,8 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
         }
         
         $this->columns = array();
-                
         /* @var $selExpr Doctrine\ORM\Query\AST\SelectExpression */
-        foreach($selectClause->selectExpressions as $selExpr) {
-            
+        foreach($selectClause->selectExpressions as $selExpr) {            
             /* @var $expr Doctrine\ORM\Query\AST\PathExpression */
             $expr = $selExpr->expression;
             
