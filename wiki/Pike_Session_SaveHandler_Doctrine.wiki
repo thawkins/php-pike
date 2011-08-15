@@ -10,4 +10,43 @@ With bigger our complex projects where things as load balancing are neccasary sa
 Are you like us using Zend Framework and Doctrine 2 integrated together? And do you want to store your sessions in the database without using the Zend_Session_SaveHandler_dbTable class which requires extra seperate configuration? Then take a look at this!
 
 == What do you need to do? ==
-From this place my friend Pieter has to do his work!
+To accomplish this integration with Zend Session and Doctrine, you should follow these steps:
+
+Step 1. Integrate de PiKe library
+At the moment when writing this article the Pike_Session_SaveHandler_Doctrine for Doctrine 2 is the only component that is available in the PiKe library. A lot of other components will be added, but most of them can be used individually. In this case it's easiest to download the full PiKe library and put it in the library folder of your Zend Framework application. To make sure that the PiKe library can be found with the Zend auto loader, add the following:
+
+autoloadNamespaces[] = "Pike"
+
+==Step 2. Creating an entity for Session SaveHandler==
+Because Pike_Session_SaveHandler_Doctrine uses Doctrine 2 entities, you must create an entity that implements the Pike_Session_Entity_Interface. This way Pike_Session_SaveHandler_Doctrine know how to communicate with it and knows how to put in the database and retrieve from it. If you don't have a session table in your database already you may use our session entity.
+
+#CODE#
+
+There are several fields that can be modified as long as you make sure that the implemented methods return the right data. If this is not the case, strange things can happen. However, the example above will most of the time be sufficient.
+
+Step 3. Configure Zend_Session in application.ini
+The next step is to configure Zend_Session in yout application.ini so that it will work with Pike_Session_SaveHandler_Doctrine. This is very easy and only requires the addition of the following two lines:
+
+{{{
+resources.session.saveHandler.class = "Pike_Session_SaveHandler_Doctrine"
+
+resources.session.saveHandler.options.entityName = "My\Entity\Session"
+}}}
+
+This should be sufficient to work. Replace "My" with the namespace you put your Doctrine entities in and check you session entity name. If this isn't correct, a lot of errors will occur.
+
+==Step 4. Your bootstrap modification==
+A small modification in your bootstrap is also required. You must create an application resource for this to make optionally portable for other projects. However the following change is perfectly fine already:
+
+#CODE#
+
+In the first place this code makes sure that Doctrine and Zend_Session are bootstrapped as application resources. If you use Bisna you'll bootstrap the Doctrine resource. This resource will provide you with the class Bisa\Application\Container\DoctrineContainer that contains the getEntityManager method. This method is required for the entity manager retrieval that will be used in Pike_Session_SaveHandler_Doctrine. Ofcourse you're totally free to retrieve the entity manager in every way you like. Please note that it's very important that this is done BEFORE Zend_Session::start() is called.
+
+Your sessions will be saved into the database!
+
+There you are! You have a nice implemented way and you don't need to throw Doctrine out of the window. Cheers! The class Pike_Session_SaveHandler_Doctrine is not very large and I expect (and hope not) very much bugs.
+
+If you have any questions, issues or bugs, please report them at:
+http://code.google.com/p/php-pike
+
+ 
