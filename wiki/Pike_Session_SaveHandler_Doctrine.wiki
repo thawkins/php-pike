@@ -1,7 +1,7 @@
 #summary Get more to know about Doctrine ZF session savehandler
 #labels Featured
 
-= What can I do with Pike_Session_SaveHandler_Doctrine? =
+=What can I do with Pike_Session_SaveHandler_Doctrine?=
 
 Normally PHP sessions are stored as files in your linux or Windows file system. For a lot of projects this is fine. You can modify the session save_path to seperate the session files for proberly security reasons.
 
@@ -9,18 +9,85 @@ With bigger our complex projects where things as load balancing are neccasary sa
 
 Are you like us using Zend Framework and Doctrine 2 integrated together? And do you want to store your sessions in the database without using the Zend_Session_SaveHandler_dbTable class which requires extra seperate configuration? Then take a look at this!
 
-== What do you need to do? ==
+==What do you need to do?==
 To accomplish this integration with Zend Session and Doctrine, you should follow these steps:
 
-Step 1. Integrate de PiKe library
+==Step 1. Integrate de PiKe library==
 At the moment when writing this article the Pike_Session_SaveHandler_Doctrine for Doctrine 2 is the only component that is available in the PiKe library. A lot of other components will be added, but most of them can be used individually. In this case it's easiest to download the full PiKe library and put it in the library folder of your Zend Framework application. To make sure that the PiKe library can be found with the Zend auto loader, add the following:
 
-autoloadNamespaces[] = "Pike"
+{{{autoloadNamespaces[] = "Pike"}}}
 
 ==Step 2. Creating an entity for Session SaveHandler==
 Because Pike_Session_SaveHandler_Doctrine uses Doctrine 2 entities, you must create an entity that implements the Pike_Session_Entity_Interface. This way Pike_Session_SaveHandler_Doctrine know how to communicate with it and knows how to put in the database and retrieve from it. If you don't have a session table in your database already you may use our session entity.
 
-#CODE#
+{{{
+namespace Keesschepers\Entity;
+ 
+require_once(__DIR__ . '/BasicEntity.php');
+ 
+/**
+ * Adminsession
+ *
+ * @Table(name="session")
+ * @Entity
+ */
+class Session implements \Pike_Session_Entity_Interface
+{
+ 
+  /**
+   * @var string $session_id
+   *
+   * @Column(name="session_id", type="string", nullable=false)
+   * @Id
+   */
+  protected $session_id;
+ 
+  /**
+   * @var string $session_data
+   *
+   * @Column(name="session_data", type="text", nullable=false)
+   */
+  protected $session_data;
+ 
+  /**
+   * @var string $session_expire
+   *
+   * @Column(name="session_expire", type="datetime", nullable=false)
+   */
+  protected $session_expire;
+ 
+  public function getData()
+  {
+    return $this->session_data;
+  }
+ 
+  public function setdata($data)
+  {
+    $this->session_data = $data;
+  }
+ 
+  public function setModified(\DateTime $date)
+  {
+    $this->session_expire = $date;
+  }
+ 
+  public function getModified()
+  {
+    return $this->session_expire;
+  }
+ 
+  public static function getModifiedFieldName()
+  {
+    return 'session_expire';
+  }
+ 
+  public function setId($id)
+  {
+    $this->session_id = $id;
+  }
+ 
+}
+}}}
 
 There are several fields that can be modified as long as you make sure that the implemented methods return the right data. If this is not the case, strange things can happen. However, the example above will most of the time be sufficient.
 
