@@ -28,7 +28,7 @@ namespace My\Entity;
 require_once(__DIR__ . '/BasicEntity.php');
  
 /**
- * Adminsession
+ * Session
  *
  * @Table(name="session")
  * @Entity
