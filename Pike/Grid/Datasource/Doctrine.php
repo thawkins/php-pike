@@ -25,164 +25,194 @@
  * Datasource for Doctrine queries and entities. You can use this datasource with
  * Pike_Grid which will both create all neccasary javascript and JSON for drawing
  * a grid with JQgrid.
- * 
- * Dependecies: JQuery, jqGrid, Doctrine, DoctrineExtensions, Zend Framework
+ *
+ * Dependecies: jqGrid, Doctrine, Zend Framework
  *
  */
 class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
 {
+    /**
+     *
+     * The columns 'container'
+     *
+     * @var Pike_Grid_Datasource_Columns
+     */
+    public $columns;
 
-    protected $data = array();
-    protected $columns = array();
-    protected $query;
+    /**
+     * Array container where the actual grid data will be loaded in.
+     *
+     * @var array
+     */
+    protected $_data = array();
 
-    protected $params = array();
-    protected $limitPerPage = 50;
-    
+    protected $_query;
+
+    protected $_params = array();
+    protected $_limitPerPage = 50;
+
     public function __construct($source)
     {
         switch($source) {
             case ($source instanceof Doctrine\ORM\QueryBuilder) :
-                $this->query = $source->getQuery();
+                $this->_query = $source->getQuery();
                 break;
             case ($source instanceof Doctrine\ORM\Query) :
-                 $this->query = $source;
+                 $this->_query = $source;
                 break;
             case ($source instanceof \Doctrine\ORM\EntityRepository) :
-                $this->query = $source->createQueryBuilder('al')->getQuery();
+                $this->_query = $source->createQueryBuilder('al')->getQuery();
+                break;
+            default :
+                throw new Pike_Exception('Unknown source given, source must either be an entity, query or querybuilder object.');
                 break;
         }
-             
 
-        /**
-         * Data is used for the column names so using a metamapper would be better.
-         */
-        $query = clone $this->query;        
+        $this->setColumns();
 
     }
-
     /**
      *
      * Looks up in the AST what select expression we use and analyses which
      * fields are used. This is passed thru the datagrid for displaying fieldnames.
-     * The array returned is a jqGrid compattible array.
-     * 
-     * @todo somehow we need to fix if query is a repository to expand all fields
-     * a good example would be the zfgrid.
-     * 
+     *
+     *
      * @return array
      */
-    public function getColumns()
+    private function setColumns()
     {
-        $selectClause = $this->query->getAST()->selectClause;
+        $this->columns = new Pike_Grid_Datasource_Columns();
+
+        $selectClause = $this->_query->getAST()->selectClause;
         if(count($selectClause->selectExpressions) == 0) {
             throw new Pike_Exception('The grid query should contain at least one column, none found.');
         }
-        
-        $this->columns = array();
+
         /* @var $selExpr Doctrine\ORM\Query\AST\SelectExpression */
-        foreach($selectClause->selectExpressions as $selExpr) {            
+        foreach($selectClause->selectExpressions as $selExpr) {
+
             /* @var $expr Doctrine\ORM\Query\AST\PathExpression */
             $expr = $selExpr->expression;
-            
+
             $alias = $expr->identificationVariable;
             $name = $expr->field;
             $label = ($selExpr->fieldIdentificationVariable === null) ? $name : $selExpr->fieldIdentificationVariable;
-            
-            $this->columns[$name] = array(
-                'name' => $name, 
-                'label' => $label, 
-                'index' => (strlen($alias) > 0 ? ($alias . '.') : '') . $name
-            );
-            
-        }
+            $index = (strlen($alias) > 0 ? ($alias . '.') : '') . $name;
 
-        return $this->columns;
+            $this->columns->add($name, $label, $index);
+        }
     }
 
     /**
      *
-     * Test if the grid/source has given columnname
-     * 
-     * @param string $name column name
-     * @return boolean
+     * Look if there is default sorting defined in the original query by asking the AST. Defining
+     * default sorting is done outside the datasource where query or querybuilder object is defined.
+     *
+     * @return array
      */
-    public function hasColumn($name)
-    {
-        return array_key_exists($name, $this->columns);
-    }
-
     public function getDefaultSorting()
     {
-        return null; //not yet supported.
+        if(null !== $this->_query->getAST()->orderByClause) {
+           //support for 1 field only
+            $orderByClause = $this->_query->getAST()->orderByClause;
+
+            /* @var $orderByItem Doctrine\ORM\Query\AST\OrderByItem */
+            $orderByItem = $orderByClause->orderByItems[0];
+
+            if($orderByItem->expression instanceof \Doctrine\ORM\Query\AST\PathExpression) {
+                $alias = $orderByItem->expression->identificationVariable;
+                $field = $orderByItem->expression->field;
+
+                $data['index'] = $field;
+                $data['direction'] = $orderByItem->type;
+
+                return $data;
+            }
+        }
+
+        return null;
     }
 
+    /**
+     *
+     * Set the parameters which proberly come from jquery.
+     *
+     * @param array $params
+     */
     public function setParameters(array $params) {
-        $this->params = $params;
+        $this->_params = $params;
     }
-    
+
     public function setResultsPerPage($num) {
-        $this->limitPerPage = $num;
+        $this->_limitPerPage = (int)$num;
     }
-    
+
     /**
      *
      * Returns a JSON string useable for JQuery Grid. This grids interprets this
      * data and is able to draw a grid.
-     * 
+     *
      * @return string JSON data
      */
     public function getJSON()
-    {        
-        $offset = $this->limitPerPage * ($this->params['page'] - 1);
+    {
+        $offset = $this->_limitPerPage * ($this->_params['page'] - 1);
         $hints = array();
 
-        $count = Pike_Grid_Datasource_Doctrine_Paginate::getTotalQueryResults($this->query);        
-        
+        $count = Pike_Grid_Datasource_Doctrine_Paginate::getTotalQueryResults($this->_query);
+
         /**
          * Sorting if defined
          */
-        if(array_key_exists('sidx', $this->params) && strlen($this->params['sidx']) > 0) {
-            $columns = $this->columns;
-            $sidx = $this->params['sidx'];
-            $sord = (in_array(strtoupper($this->params['sord']), array('ASC','DESC')) ? strtoupper($this->params['sord']) : 'ASC');
-            
+        if(array_key_exists('sidx', $this->_params) && strlen($this->_params['sidx']) > 0) {
+            $columns = $this->columns->getColumns();
+            $sidx = $this->_params['sidx'];
+            $sord = (in_array(strtoupper($this->_params['sord']), array('ASC','DESC')) ? strtoupper($this->_params['sord']) : 'ASC');
+
             //test if searchindex really is defined. (security)
             $hasSidx = function() use($columns, $sidx) {
               foreach($columns as $column) {
-                  if($columns['index'] == $sidx) return true;
+                  if($sidx == $column['index']) return true;
               }
-              
+
               return false;
             };
-            
+            $hasSidx = $hasSidx();
+
+            if($hasSidx == false) {
+                if(isset($columns[$sidx])) {
+                    $hasSidx = true;
+                    $sidx = $columns[$sidx]['index'];
+                }
+            }
+
             if($hasSidx) {
                 $hints[\Doctrine\ORM\Query::HINT_CUSTOM_TREE_WALKERS] = array('Pike_Grid_Datasource_Doctrine_OrderByWalker');
                 $hints['sidx'] =  $sidx;
                 $hints['sord'] = $sord;
             }
-        }        
-        
+        }
+
         $paginateQuery = Pike_Grid_Datasource_Doctrine_Paginate::getPaginateQuery(
-                $this->query,
+                $this->_query,
                 $offset,
-                $this->limitPerPage,
+                $this->_limitPerPage,
                 $hints
         );
-        
+
         $result = $paginateQuery->getResult();
 
-        $data = array();
-        $data['page'] = (int)$this->params['page'];
-        $data['total'] = ceil($count / $this->limitPerPage);
-        $data['records'] = $count;
-        $data['rows'] = array();
-        
+        $this->_data = array();
+        $this->_data['page'] = (int)$this->_params['page'];
+        $this->_data['total'] = ceil($count / $this->_limitPerPage);
+        $this->_data['records'] = $count;
+        $this->_data['rows'] = array();
+
         foreach($result as $row) {
-            $data['rows'][] = array('cell' => array_values($row));
+            $this->_data['rows'][] = array('cell' => array_values($row));
         }
-                
-        return json_encode($data);
+
+        return json_encode($this->_data);
     }
 
 }

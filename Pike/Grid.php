@@ -32,7 +32,6 @@ class Pike_Grid
 
     protected $id;
     protected $pagerid;
-    protected $columns = array();
 
     /**
      *
@@ -42,7 +41,7 @@ class Pike_Grid
 
     /**
      * Amount of rows per 'page' default is 50
-     * 
+     *
      * @var integer
      */
     protected $recordsPerPage = 50;
@@ -53,10 +52,10 @@ class Pike_Grid
 
     /**
      * Pike_Grid needs to know the datasource in order to generate the initial column names etc.
-     * 
-     * @param Pike_Grid_Datasource_Interface $datasource 
+     *
+     * @param Pike_Grid_Datasource_Interface $datasource
      */
-    public function __construct(Pike_Grid_Datasource_Interface $datasource)
+    public function __construct(Pike_Grid_Datasource_Interface $datasource, array $options = array())
     {
         $id = rand(0, 3000);
 
@@ -64,25 +63,8 @@ class Pike_Grid
         $this->pagerid = 'pgrid' . $id . 'pager';
 
         $this->datasource = $datasource;
-        $this->columns = $this->datasource->getColumns();
 
         $this->url = $_SERVER['REQUEST_URI'];
-    }
-
-    /**
-     *
-     * Replaces the datsource column name to a (nice) new name
-     * 
-     * @param type $original
-     * @param type $new 
-     */
-    public function setColumnName($originalName, $newName)
-    {
-        if ($this->datasource->hasColumn($originalName)) {
-            $this->columns[$originalName]['label'] = $newName;
-        }
-
-        return $this;
     }
 
     public function setRowsPerPage($amount)
@@ -96,24 +78,29 @@ class Pike_Grid
     public function setCaption($caption)
     {
         $this->caption = $caption;
+
+        return $this;
     }
 
-    /**
-     *
-     * Mark a field as editable in the colmodel.
-     * 
-     * @param string $fieldname query matched fieldname
-     */
-    public function enableFieldEdit($fieldname)
-    {
-        $this->columns[$fieldname]['editable'] = true;
+    public function addColumn($name, $data, $label = null, $sidx = null, $position = null) {
+        $this->datasource->columns->add($name, $label, $sidx, $position);
+
+        //do something with data
+
+        return $this;
+    }
+
+    public function setColumnAttribute($name, $attribute, $value) {
+        $this->datasource->columns[$name][$attribute] = $value;
+
+        return $this;
     }
 
     /**
      *
      * Set the URL where json data will be requested.
-     * 
-     * @param string $url 
+     *
+     * @param string $url
      */
     public function setUrl($url)
     {
@@ -150,16 +137,16 @@ class Pike_Grid
             'pager' => $this->pagerid,
             'height' => $this->height,
             'viewrecords' => true,
-            'colModel' => array_values($this->columns),
+            'colModel' => array_values($this->datasource->columns->getColumns()),
         );
 
-        foreach ($this->columns as $column) {
+        foreach ($this->datasource->columns as $column) {
             $settings['colNames'][] = $column['label'];
         }
 
         if (!is_null($defaultSorting = $this->datasource->getDefaultSorting())) {
             $settings['sortname'] = $defaultSorting['index'];
-            $settings['sortorder'] = $defaultSorting['direction'];
+            $settings['sortorder'] = strtolower($defaultSorting['direction']);
         }
 
         if (!is_null($this->caption)) {
@@ -175,12 +162,8 @@ class Pike_Grid
                 break;
         }
 
-        $settings['onSelectRow'] = "function(id){ if(id && id!==lastsel){ jQuery('#" . $this->id . "').jqGrid('restoreRow',lastsel); jQuery('#" . $this->id . "').jqGrid('editRow',id,true); lastsel=id; } },";
+        $json = json_encode($settings);
 
-        $regex = '/"onSelectRow":"([\w\-\.]+)"/i';
-        $replace = '"onSelectRow":$1';
-        $json = preg_replace($regex, $replace, json_encode($settings)); 
-        
         $output = 'var lastsel;' . PHP_EOL;
         $output .= '$("#' . $this->id . '").jqGrid(' . $json . ');';
 

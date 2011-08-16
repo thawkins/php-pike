@@ -48,7 +48,7 @@ class Pike_Grid_Datasource_Doctrine_OrderByWalker extends TreeWalkerAdapter
     {
         $sidx = $this->_getQuery()->getHint('sidx');
         $sord = $this->_getQuery()->getHint('sord');
-        
+
         if(strpos($sidx, '.') !== false) {
             $parts = explode('.', $sidx);
             $sidx = $parts[1];
@@ -56,25 +56,30 @@ class Pike_Grid_Datasource_Doctrine_OrderByWalker extends TreeWalkerAdapter
         } else {
             $alias = null;
         }
-        
+
         $pathExpression = new PathExpression(
                 PathExpression::TYPE_STATE_FIELD | PathExpression::TYPE_SINGLE_VALUED_ASSOCIATION,
                 $alias,
                 $sidx
         );
         $pathExpression->type = PathExpression::TYPE_STATE_FIELD;
-        
+
         $orderByItem = new orderByItem($pathExpression);
         $orderByItem->type = $sord;
-        
+
+        $orderByItems = array($orderByItem);
+
         /**
          * Remove all other orderby items and add Pike_Grid orderfield.
          */
-        $AST->orderByClause->orderByItems = array(
-            $orderByItem
-        );
-                
+        if(null === $AST->orderByClause) {
+            $AST->orderByClause = new OrderByClause($orderByItems);
+        } else {
+            $AST->orderByClause->orderByItems = $orderByItems;
+        }
+
+
     }
-   
+
 
 }
