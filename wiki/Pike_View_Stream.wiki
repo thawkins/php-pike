@@ -31,3 +31,16 @@ That's all. Just add the tilde ~ and the job is done. This variable is left alon
 == Okay, i'm convinced, how to install? ==
 Installation is even easier. Just upload the Pike folder to your library in you application and ad the following lines to your application.ini:
 
+{{{
+pluginPaths.Pike_Application_Resource = "Pike/Application/Resource"
+resources.stream.streamWrapper = "Pike_View_Stream"
+autoloaderNamespaces[] = "Pike"
+}}}
+
+There are only two important things. The first is that you should aware that the second line from the configuration example above is added BEFORE you have something like: resources.view[] =. The second thing is that, and it might sound a little weird that you should disable short_open_tag in your php.ini or virtualhost configuration.
+
+This is a reported bug in the Zend Framework, if short_open_tag is set to "on" then no stream will be used at all and you cannot use the Pike_View_Stream. In order to make sure that Zend Framework will trigger his view stream (and look for Pike_View_stream) you should set this setting to Off. 
+
+This doesn't mean that you cannot use the short tag at all! Because of the Pike_View_Stream you can use it because it will replace every <?= or <? instance in your view script with <?php echo or <?php.
+
+So we hope that this will help you to make a more safer application!
