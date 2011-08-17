@@ -26,10 +26,10 @@
  */
 
 /**
- * Pike exception
+ * Pike error exception
  *
  * @category   PiKe
  * @copyright  Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)
  * @license    MIT
  */
-class Pike_Exception extends Zend_Exception {}
+class Pike_ErrorException extends ErrorException {}

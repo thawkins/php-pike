@@ -26,10 +26,23 @@
  */
 
 /**
- * Pike exception
+ * Sets the PHP error handler and logs PHP errors
  *
+ * @link       http://php.net/manual/en/function.set-error-handler.php
  * @category   PiKe
  * @copyright  Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)
  * @license    MIT
  */
-class Pike_Exception extends Zend_Exception {}
+class Pike_Application_Resource_Error extends Zend_Application_Resource_ResourceAbstract
+{
+    public function init()
+    {
+        $options = $this->getOptions();
+        $handler = isset($options['handler']) ? $options['handler'] : 'Pike_ErrorHandler';
+        set_error_handler(array($handler, 'dispatch'));
+
+        $path = isset($options['path']) ? $options['path'] : APPLICATION_PATH . '/../data/logs/php_errors.log';
+        $logger = new Zend_Log(new Zend_Log_Writer_Stream($path));
+        $logger->registerErrorHandler();
+    }
+}

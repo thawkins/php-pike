@@ -123,7 +123,7 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
                 $alias = $orderByItem->expression->identificationVariable;
                 $field = $orderByItem->expression->field;
 
-                $data['index'] = $field;
+                $data['index'] = (strlen($alias) > 0 ? $alias . '.' : '') . $field;
                 $data['direction'] = $orderByItem->type;
 
                 return $data;
@@ -172,6 +172,8 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
             //test if searchindex really is defined. (security)
             $hasSidx = function() use($columns, $sidx) {
               foreach($columns as $column) {
+                  if(!isset($column['index'])) return false;
+
                   if($sidx == $column['index']) return true;
               }
 
@@ -180,7 +182,7 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
             $hasSidx = $hasSidx();
 
             if($hasSidx == false) {
-                if(isset($columns[$sidx])) {
+                if(isset($columns[$sidx]['index'])) {
                     $hasSidx = true;
                     $sidx = $columns[$sidx]['index'];
                 }
@@ -209,6 +211,21 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
         $this->_data['rows'] = array();
 
         foreach($result as $row) {
+            foreach($this->columns as $index=>$column) {
+                if(array_key_exists($index, $row)) {
+                    continue;
+                } else {
+                    if(is_callable($column['data'])) {
+                        $row[$index] = $column['data']($row);
+                    } else {
+                        array_walk($row, function($value, $key) use (&$column) {
+                            $column['data'] = str_replace('{' . strtolower($key) . '}', $value, $column['data']);
+                        });
+
+                        $row[$index] = $column['data'];
+                    }
+                }
+            }
             $this->_data['rows'][] = array('cell' => array_values($row));
         }
 
