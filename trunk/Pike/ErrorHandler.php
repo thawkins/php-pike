@@ -20,16 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @category   PiKe
- * @copyright  Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)
- * @license    MIT
+ * @category  PiKe
+ * @copyright Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)
+ * @license   MIT
  */
 
 /**
- * Pike exception
+ * Error handler
  *
- * @category   PiKe
- * @copyright  Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)
- * @license    MIT
+ * @category  PiKe
+ * @copyright Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)
+ * @license   MIT
  */
-class Pike_Exception extends Zend_Exception {}
+class Pike_ErrorHandler
+{
+    /**
+     * Dispatches the PHP error and throws a Pike_ErrorException
+     *
+     * @param  integer $errno
+     * @param  string  $errstr
+     * @param  string  $errfile
+     * @param  integer $errline
+     * @return boolean
+     */
+    public static function dispatch($errno, $errstr, $errfile, $errline)
+    {
+        throw new Pike_ErrorException($errstr, 0, $errno, $errfile, $errline);
+    }
+}

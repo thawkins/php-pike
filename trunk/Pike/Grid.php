@@ -60,11 +60,21 @@ class Pike_Grid
         $id = rand(0, 3000);
 
         $this->id = 'pgrid' . $id;
-        $this->pagerid = 'pgrid' . $id . 'pager';
+        $this->pagerId = 'pgrid' . $id . 'pager';
 
         $this->datasource = $datasource;
 
         $this->url = $_SERVER['REQUEST_URI'];
+    }
+    
+    public function setId($id) {
+        $this->id = $id;
+    }
+
+    public function setPagerId($id) {
+        $this->pagerId = $id;
+
+        return $this;
     }
 
     public function setRowsPerPage($amount)
@@ -83,9 +93,11 @@ class Pike_Grid
     }
 
     public function addColumn($name, $data, $label = null, $sidx = null, $position = null) {
-        $this->datasource->columns->add($name, $label, $sidx, $position);
+        $this->datasource->columns->add($name, $label, $sidx, $position, $data);
 
-        //do something with data
+        if(null === $sidx) {
+            $this->datasource->columns[$name]['sortable'] = false;
+        }
 
         return $this;
     }
@@ -120,7 +132,7 @@ class Pike_Grid
 
     public function getHTML()
     {
-        return '<table id="' . $this->id . '"></table><div id="' . $this->pagerid . '"></div>';
+        return '<table id="' . $this->id . '"></table><div id="' . $this->pagerId . '"></div>';
     }
 
     /**
@@ -134,13 +146,15 @@ class Pike_Grid
             'mtype' => 'post',
             'rowNum' => $this->recordsPerPage,
             'autoWidth' => true,
-            'pager' => $this->pagerid,
+            'pager' => $this->pagerId,
             'height' => $this->height,
             'viewrecords' => true,
-            'colModel' => array_values($this->datasource->columns->getColumns()),
         );
 
         foreach ($this->datasource->columns as $column) {
+            unset($column['data']);
+
+            $settings['colModel'][] = $column;
             $settings['colNames'][] = $column['label'];
         }
 
@@ -162,7 +176,7 @@ class Pike_Grid
                 break;
         }
 
-        $json = json_encode($settings);
+        $json = Zend_Json::prettyPrint(Zend_Json::encode($settings));
 
         $output = 'var lastsel;' . PHP_EOL;
         $output .= '$("#' . $this->id . '").jqGrid(' . $json . ');';
