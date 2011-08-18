@@ -95,7 +95,7 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
             $expr = $selExpr->expression;
 
             $alias = $expr->identificationVariable;
-            $name = $expr->field;
+            $name = ($selExpr->fieldIdentificationVariable === null) ? $expr->field : $selExpr->fieldIdentificationVariable;
             $label = ($selExpr->fieldIdentificationVariable === null) ? $name : $selExpr->fieldIdentificationVariable;
             $index = (strlen($alias) > 0 ? ($alias . '.') : '') . $name;
 
@@ -212,9 +212,10 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
 
         foreach($result as $row) {
             foreach($this->columns as $index=>$column) {
+                
                 if(array_key_exists($index, $row)) {
                     continue;
-                } else {
+                } else {                    
                     if(is_callable($column['data'])) {
                         $row[$index] = $column['data']($row);
                     } else {
