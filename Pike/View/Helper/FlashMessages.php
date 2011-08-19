@@ -64,11 +64,11 @@ class Pike_View_Helper_FlashMessages extends Zend_View_Helper_Abstract
      * Common namespaces are "default" (success), "warning" and "error".
      *
      * Input:
-     *     $this->_flashMessenger->addMessage('Success message #1');
-     *     $this->_flashMessenger->setNamespace('warning')->addMessage('Warning message #1');
-     *     $this->_flashMessenger->setNamespace('error')->addMessage('Error message #1');
-     *     $this->_flashMessenger->setNamespace('default')->addMessage('Success message #2');
-     *     $this->_flashMessenger->addMessage('Success message #3');
+     *     $this->_helper->flashMessenger->addMessage('Success message #1');
+     *     $this->_helper->flashMessenger->setNamespace('warning')->addMessage('Warning message #1');
+     *     $this->_helper->flashMessenger->setNamespace('error')->addMessage('Error message #1');
+     *     $this->_helper->flashMessenger->setNamespace('default')->addMessage('Success message #2');
+     *     $this->_helper->flashMessenger->addMessage('Success message #3');
      *
      * Output:
      *    <div id="message-container">
