@@ -126,6 +126,7 @@ class Pike_Reflection_Resource
             }
         }
 
+        $resources = $this->_excludeErrorHandlerResource($resources);
         return $resources;
     }
 
@@ -153,6 +154,26 @@ class Pike_Reflection_Resource
         }
 
         return $flatResources;
+    }
+
+    /**
+     * Returns resources with the error handler resource excluded
+     *
+     * @param  array $resources
+     * @return array
+     */
+    protected function _excludeErrorHandlerResource($resources)
+    {
+        /* @var $errorHandler Zend_Controller_Plugin_ErrorHandler */
+        $errorHandler = Zend_Controller_Front::getInstance()->getPlugin('Zend_Controller_Plugin_ErrorHandler');
+
+        // Access is always granted to the error handler, so it can be ignored as resource
+        $module =  $errorHandler->getErrorHandlerModule();
+        $controller =  $errorHandler->getErrorHandlerController();
+        $action =  $errorHandler->getErrorHandlerAction();
+        unset($resources[$module][$controller][$action]);
+
+        return $resources;
     }
 
     /**
