@@ -32,7 +32,7 @@ class Pike_Grid_Datasource_Columns extends ArrayObject
     {
         foreach ($columns as $column) {
             $this->add($column);
-        }
+        }                     
     }
 
     /**
@@ -91,19 +91,33 @@ class Pike_Grid_Datasource_Columns extends ArrayObject
         }
     }
 
+    
     /**
      *
-     * Sorts the columns first using a user-defined sorting function on the given position of the
-     * column and returns the sorted array.
+     * Sort items quickly before the iterator is given back as we expect to
+     * 
+     * @return ArrayIterator
+     */
+    public function getIterator() {
+        $this->uasort(function($first, $second) {
+            if($first['position'] > $second['position']) {
+                return 1;
+            } elseif($first['position'] < $second['position']) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+        
+        return parent::getIterator();
+    }
+    
+    /**
      *
      * @return array
      */
     public function getColumns()
-    {
-        //user defined sorting
-//        uasort($this->getArrayCopy(), function($first, $second) {
-//
-//        });
+    {        
         return $this->getArrayCopy();
     }
 }
