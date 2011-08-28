@@ -54,7 +54,7 @@ class Pike_Application_Resource_DoctrineFunctions extends Zend_Application_Resou
             
             foreach ($files as $file) {
                 /* @var $file DirectoryIterator */
-                if (!$file->isDot()) {
+                if (!$file->isDot() && $file->isFile()) {
                     require_once $file->getPathname();
 
                     $className = str_replace($libraryPath . '/', '', realpath($file->getPathname()));
