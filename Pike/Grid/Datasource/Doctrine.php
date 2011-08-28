@@ -91,16 +91,45 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
         /* @var $selExpr Doctrine\ORM\Query\AST\SelectExpression */
         foreach($selectClause->selectExpressions as $selExpr) {
 
-            /* @var $expr Doctrine\ORM\Query\AST\PathExpression */
+            /**
+             * Some magic needs to happen here. If $selExpr isn't a instanceof
+             * Doctrine\ORM\Query\AST\PathExpression then it might be a custom
+             * expression like a vendor specific function. We could use the 
+             * $selExpr->fieldIdentificationVariable member which is the alias
+             * given to the special expression but sorting at this field
+             * could cause strange effects.
+             * 
+             * For instance: SELECT DATE_FORMAT(datefield,"%Y") AS alias FROM sometable
+             * 
+             * When you say: ORDER BY alias DESC
+             * 
+             * You could get other results when you do:
+             * 
+             * ORDER BY sometable.datefield DESC
+             * 
+             * My idea is to rely on the alias field by default because it would 
+             * suite for most queries. If someone would like to retrieve this expression
+             * specific info they can add a field filter. $ds->addFieldFilter(new DateFormat_Field_Filter(), 'expression classname');
+             * 
+             * And info of the field would be extracted from this class, something like that.
+             */
+            
             $expr = $selExpr->expression;
-
-            $alias = $expr->identificationVariable;
-            $name = ($selExpr->fieldIdentificationVariable === null) ? $expr->field : $selExpr->fieldIdentificationVariable;
-            $label = ($selExpr->fieldIdentificationVariable === null) ? $name : $selExpr->fieldIdentificationVariable;
-            $index = (strlen($alias) > 0 ? ($alias . '.') : '') . $name;
-
+            
+            /* @var $expr Doctrine\ORM\Query\AST\PathExpression */
+            if($expr instanceof Doctrine\ORM\Query\AST\PathExpression) {
+                $alias = $expr->identificationVariable;
+                $name = ($selExpr->fieldIdentificationVariable === null) ? $expr->field : $selExpr->fieldIdentificationVariable;
+                $label = ($selExpr->fieldIdentificationVariable === null) ? $name : $selExpr->fieldIdentificationVariable;
+                $index = (strlen($alias) > 0 ? ($alias . '.') : '') . $name;
+            } else {
+                $name = $selExpr->fieldIdentificationVariable;
+                $label = $name;
+                $index = null;
+            }
             $this->columns->add($name, $label, $index);
         }
+        
     }
 
     /**
@@ -213,9 +242,7 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
         foreach($result as $row) {
             foreach($this->columns as $index=>$column) {
                 
-                if(array_key_exists($index, $row)) {
-                    continue;
-                } else {                    
+                if(array_key_exists('data', $column)) {
                     if(is_callable($column['data'])) {
                         $row[$index] = $column['data']($row);
                     } else {
@@ -224,9 +251,29 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
                         });
 
                         $row[$index] = $column['data'];
-                    }
+                    }                    
+                } elseif(array_key_exists($index, $row)) {
+                    continue;
+                } else {                      
+                    throw new Pike_Exception('Cannot render data for column '.$index);
                 }
             }
+            
+            /**
+             * Sort the row data specified by the column positions
+             */
+            $columns = $this->columns;
+            
+            uksort($row, function($a, $b) use ($columns) {
+                if($columns[$a]['position'] > $columns[$b]['position']) {
+                    return 1;
+                } elseif($columns[$a]['position'] < $columns[$b]['position']) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            });
+            
             $this->_data['rows'][] = array('cell' => array_values($row));
         }
 
