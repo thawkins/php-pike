@@ -50,6 +50,8 @@ class Pike_Grid
     protected $url;
     protected $caption;
 
+    protected $attributes = array();
+    
     /**
      * Pike_Grid needs to know the datasource in order to generate the initial column names etc.
      *
@@ -72,7 +74,13 @@ class Pike_Grid
         
         return $this;
     }
-
+    
+    public function setAttribute($attribute, $value) {
+        $this->attributes[$attribute] = $value;
+        
+        return $this;
+    }
+    
     public function setPagerId($id) {
         $this->pagerId = $id;
 
@@ -178,7 +186,9 @@ class Pike_Grid
                 break;
         }
 
-        $json = Zend_Json::prettyPrint(Zend_Json::encode($settings));
+        $settings = array_merge($settings, $this->attributes);
+        
+        $json = Zend_Json::prettyPrint(Zend_Json::encode($settings, false, array('enableJsonExprFinder' => true)));
 
         $output = 'var lastsel;' . PHP_EOL;
         $output .= '$("#' . $this->id . '").jqGrid(' . $json . ');';
