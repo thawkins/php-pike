@@ -128,12 +128,13 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
                 $alias = $expr->identificationVariable;
                 $name = ($selExpr->fieldIdentificationVariable === null) ? $expr->field : $selExpr->fieldIdentificationVariable;
                 $label = ($selExpr->fieldIdentificationVariable === null) ? $name : $selExpr->fieldIdentificationVariable;
-                $index = (strlen($alias) > 0 ? ($alias . '.') : '') . $name;
+                $index = (strlen($alias) > 0 ? ($alias . '.') : '') . $expr->field;
             } else {
                 $name = $selExpr->fieldIdentificationVariable;
                 $label = $name;
                 $index = null;
             }
+            
             $this->columns->add($name, $label, $index);
         }
         
