@@ -57,8 +57,16 @@ class Pike_Grid_Datasource_Columns extends ArrayObject
 
             $column['position'] = (is_null($position) ? $this->count() : $position);
 
-            if(null !== $data)
+            /**
+             * Default data drawing callback
+             */
+            if(!is_callable($data)) {
+                $column['data'] = function($row) use ($column) {
+                    return $row[$column['name']];
+                };
+            } else {
                 $column['data'] = $data;
+            }
         }
 
         $this->offsetSet($column['name'], $column); //array object access

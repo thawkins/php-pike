@@ -50,6 +50,13 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
 
     protected $_params = array();
     protected $_limitPerPage = 50;
+    
+    /**
+     * When this column is set it tells jqGrid how to identify each row
+     * 
+     * @var array
+     */
+    protected $_identifierColumn;
 
     public function __construct($source)
     {
@@ -130,6 +137,14 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
             $this->columns->add($name, $label, $index);
         }
         
+    }
+    
+    public function setIdentifierColumn($column) {
+        if(isset($this->columns[$column])) {
+            $this->_identifierColumn = $this->columns[$column];
+        } else {
+            throw new Pike_Exception('Cannot set identifier to a unknown column ('.$column.')');
+        }
     }
 
     /**
@@ -241,21 +256,10 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
 
         foreach($result as $row) {
             foreach($this->columns as $index=>$column) {
-                
-                if(array_key_exists('data', $column)) {
-                    if(is_callable($column['data'])) {
-                        $row[$index] = $column['data']($row);
-                    } else {
-                        array_walk($row, function($value, $key) use (&$column) {
-                            $column['data'] = str_replace('{' . strtolower($key) . '}', $value, $column['data']);
-                        });
-
-                        $row[$index] = $column['data'];
-                    }                    
-                } elseif(array_key_exists($index, $row)) {
-                    continue;
-                } else {                      
-                    throw new Pike_Exception('Cannot render data for column '.$index);
+                if(is_callable($column['data'])) {
+                    $row[$index] = $column['data']($row);
+                } else {
+                    throw new Pike_Exception('Could not draw data for column ('.$index.')');
                 }
             }
             
@@ -274,7 +278,14 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
                 }
             });
             
-            $this->_data['rows'][] = array('cell' => array_values($row));
+            $record = array();
+            $record['cell'] = array_values($row);
+            
+            if(null !== $this->_identifierColumn) {                
+                $record['id'] = $this->_identifierColumn['data']($row);
+            }
+            
+            $this->_data['rows'][] = $record;
         }
 
         return json_encode($this->_data);
