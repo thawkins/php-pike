@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Pike_View_Helper_Navigation_PikeMenu</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Pike_View_Helper_Navigation_PikeMenu</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">With PiKe menu you can render a menu with an addidtional permission check. The normal navigation</p>
+<p class="description"><p>menu helper has support for setting only one role with setRole. Some applications users are  allowed to have more roles and when menu is rendered it needs to check the user may see an entry  based on __multiple__ roles! Check it out!</p><p>It work's very simple, in your frontcontroller plugin or bootstrap where you set up  your website navigation replace your current menu implementation by the following:</p><p><div class="src-code"><ol><li><div class="src-line">&nbsp;<span class="src-var">$config&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id">Zend_Config_Xml</span><span class="src-sym">(</span><span class="src-var">$fileToANavigationXML</span><span class="src-sym">,&nbsp;</span><span class="src-str">'nav'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$navigation&nbsp;</span>=&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id">Zend_Navigation</span><span class="src-sym">(</span><span class="src-var">$config</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;</div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$arrayOfroles&nbsp;</span>=&nbsp;<span class="src-id">Zend_Auth</span><span class="src-sym">::</span><span class="src-id">getInstance</span><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">-&gt;</span><span class="src-id">getIdentity</span><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">-&gt;</span><a href="../default/Pike_View_Helper_Navigation_PikeMenu.html#methodgetRoles">getRoles</a><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line">&nbsp;</div></li>
+<li><div class="src-line">&nbsp;<span class="src-var">$layoutView</span><span class="src-sym">-&gt;</span><span class="src-id">navigation</span><span class="src-sym">(</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../default/Pike_View_Helper_Navigation_PikeMenu.html#methodPikeMenu">PikeMenu</a><span class="src-sym">(</span><span class="src-var">$navigation</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><span class="src-id">setACL</span><span class="src-sym">(</span><span class="src-id">Zend_Registry</span><span class="src-sym">::</span><span class="src-id">get</span><span class="src-sym">(</span><span class="src-str">'acl'</span><span class="src-sym">))&nbsp;</span><span class="src-comm">//should&nbsp;be&nbsp;a&nbsp;object&nbsp;of&nbsp;type&nbsp;Zend_ACL</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">-&gt;</span><a href="../default/Pike_View_Helper_Navigation_PikeMenu.html#methodsetRoles">setRoles</a><span class="src-sym">(</span><span class="src-var">$arrayOfRoles</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+</ol></div></p><p>And make sure u use PikeMenu either in your view (layout script proberly)</p><p>&lt;?= $this-&gt;navigation()-&gt;PikeMenu(); ?&gt;</p><p>Next make sure the Pike library is loaded with autoloaderNamespaces[] = &quot;Pike&quot;  in your  application.ini. And beyond to make sure the view navigation helper is found add something like  the following to it:</p><p>resources.view.helperPath.Pike_View_Helper_Navigation_ =                       APPLICATION_PATH &quot;/../library/Pike/View/Helper/Navigation&quot;</p></p>
+	<ul class="tags">
+				<li><span class="field">copyright:</span> Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)</li>
+				<li><span class="field">license:</span> MIT</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_View---Helper---Navigation---PikeMenu.php.html">/View/Helper/Navigation/PikeMenu.php</a> (line <span class="field">63</span>)
+		</p>
+		
+				
+		<pre>Zend_View_Helper_Navigation_Menu
+   |
+   --Pike_View_Helper_Navigation_PikeMenu</pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+																								<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$_roles" title="details" class="var-name">$_roles</a>
+				</div>
+											</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																												
+												<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#addRole" title="details" class="method-name">addRole</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#getRoles" title="details" class="method-name">getRoles</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#PikeMenu" title="details" class="method-name">PikeMenu</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$container</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setRoles" title="details" class="method-name">setRoles</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$roles</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_acceptAcl" title="details" class="method-name">_acceptAcl</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$page</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$_roles" id="$_roles"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$_roles</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number">66</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodaddRole" id="addRole"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">addRole</span> (line <span class="line-number">117</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addRole
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$role</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$role</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetRoles" id="getRoles"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRoles</span> (line <span class="line-number">112</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getRoles
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodPikeMenu" id="PikeMenu"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">PikeMenu</span> (line <span class="line-number">68</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			PikeMenu
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$container</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Zend_Navigation_Container</span>
+				<span class="var-name">$container</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetRoles" id="setRoles"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setRoles</span> (line <span class="line-number">134</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setRoles
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$roles</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$roles</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_acceptAcl" id="_acceptAcl"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_acceptAcl</span> (line <span class="line-number">77</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_acceptAcl
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$page</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Zend_Navigation_Page</span>
+				<span class="var-name">$page</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 15 Sep 2011 15:50:22 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>
