@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Pike_View_Helper_FormatException</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Pike_View_Helper_FormatException</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Helper for formatting an exception</p>
+	<ul class="tags">
+				<li><span class="field">copyright:</span> Copyright (C) 2011 by Pieter Vogelaar (platinadesigns.nl) and Kees Schepers (keesschepers.nl)</li>
+				<li><span class="field">license:</span> MIT</li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_View---Helper---FormatException.php.html">/View/Helper/FormatException.php</a> (line <span class="field">35</span>)
+		</p>
+		
+				
+		<pre>Zend_View_Helper_Abstract
+   |
+   --Pike_View_Helper_FormatException</pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																												
+												<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#formatException" title="details" class="method-name">formatException</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$e</span>, <span class="var-type">Exception</span>&nbsp;<span class="var-name">$exception</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_addScript" title="details" class="method-name">_addScript</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_addStyles" title="details" class="method-name">_addStyles</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_escape" title="details" class="method-name">_escape</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_fileExcerpt" title="details" class="method-name">_fileExcerpt</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$line</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_formatArgs" title="details" class="method-name">_formatArgs</a>
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">$args</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$single</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$format</span> = <span class="var-default">'html'</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_formatFile" title="details" class="method-name">_formatFile</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>, <span class="var-type">integer</span>&nbsp;<span class="var-name">$line</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$format</span> = <span class="var-default">'html'</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$text</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_getIcon" title="details" class="method-name">_getIcon</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#_getTraces" title="details" class="method-name">_getTraces</a>
+											(<span class="var-type">Exception</span>&nbsp;<span class="var-name">$exception</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$format</span> = <span class="var-default">'txt'</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_renderDefinitionList" title="details" class="method-name">_renderDefinitionList</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$array</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_renderDefinitionTable" title="details" class="method-name">_renderDefinitionTable</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$array</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_renderGlobalVariables" title="details" class="method-name">_renderGlobalVariables</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_renderIdentity" title="details" class="method-name">_renderIdentity</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_renderRequest" title="details" class="method-name">_renderRequest</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_renderStackTrace" title="details" class="method-name">_renderStackTrace</a>
+										()
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodformatException" id="formatException"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">formatException</span> (line <span class="line-number">48</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Formats the specified exception</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			formatException
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$e</span>, <span class="var-type">Exception</span>&nbsp;<span class="var-name">$exception</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Exception</span>
+				<span class="var-name">$exception</span>			</li>
+					<li>
+				<span class="var-type">Exception</span>
+				<span class="var-name">$e</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_addScript" id="_addScript"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_addScript</span> (line <span class="line-number">277</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds JavaScript</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_addScript
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="method_addStyles" id="_addStyles"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_addStyles</span> (line <span class="line-number">190</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds styles</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_addStyles
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="method_escape" id="_escape"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_escape</span> (line <span class="line-number">178</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Escapes a string value with html entities</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_escape
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$value</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_fileExcerpt" id="_fileExcerpt"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_fileExcerpt</span> (line <span class="line-number">331</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an excerpt of a code file around the given line number.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An HTML string</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2004-2006 Sean Kerr &lt;sean@code-box.org&gt;</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2004-2006 Fabien Potencier &lt;fabien.potencier@symfony-project.com&gt;</li>
+				<li><span class="field">access:</span> protected</li>
+				<li><span class="field">license:</span> MIT</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_fileExcerpt
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$line</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$file</span><span class="var-description">: A file path</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$line</span><span class="var-description">: The selected line number</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_formatArgs" id="_formatArgs"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_formatArgs</span> (line <span class="line-number">406</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Formats an array as a string.</p>
+	<ul class="tags">
+				<li><span class="field">copyright:</span> Copyright (c) 2004-2006 Sean Kerr &lt;sean@code-box.org&gt;</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2004-2006 Fabien Potencier &lt;fabien.potencier@symfony-project.com&gt;</li>
+				<li><span class="field">access:</span> protected</li>
+				<li><span class="field">license:</span> MIT</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_formatArgs
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$args</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$single</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$format</span> = <span class="var-default">'html'</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$args</span><span class="var-description">: The argument array</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$single</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$format</span><span class="var-description">: The format string (html or txt)</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_formatFile" id="_formatFile"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_formatFile</span> (line <span class="line-number">446</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Formats a file path.</p>
+	<ul class="tags">
+				<li><span class="field">copyright:</span> Copyright (c) 2004-2006 Sean Kerr &lt;sean@code-box.org&gt;</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2004-2006 Fabien Potencier &lt;fabien.potencier@symfony-project.com&gt;</li>
+				<li><span class="field">access:</span> protected</li>
+				<li><span class="field">license:</span> MIT</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_formatFile
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>, <span class="var-type">integer</span>&nbsp;<span class="var-name">$line</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$format</span> = <span class="var-default">'html'</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$text</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$file</span><span class="var-description">: An absolute file path</span>			</li>
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$line</span><span class="var-description">: The line number</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$format</span><span class="var-description">: The output format (txt or html)</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$text</span><span class="var-description">: Use this text for the link rather than the file path</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_getIcon" id="_getIcon"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_getIcon</span> (line <span class="line-number">294</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an exception icon</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_getIcon
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="method_getTraces" id="_getTraces"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_getTraces</span> (line <span class="line-number">356</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of exception traces.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An array of traces</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2004-2006 Sean Kerr &lt;sean@code-box.org&gt;</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2004-2006 Fabien Potencier &lt;fabien.potencier@symfony-project.com&gt;</li>
+				<li><span class="field">access:</span> protected</li>
+				<li><span class="field">license:</span> MIT</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			_getTraces
+		</span>
+					(<span class="var-type">Exception</span>&nbsp;<span class="var-name">$exception</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$format</span> = <span class="var-default">'txt'</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Exception</span>
+				<span class="var-name">$exception</span><span class="var-description">: An Exception implementation instance</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$format</span><span class="var-description">: The trace format (txt or html)</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_renderDefinitionList" id="_renderDefinitionList"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_renderDefinitionList</span> (line <span class="line-number">142</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Renders a definition list</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_renderDefinitionList
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$array</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$array</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_renderDefinitionTable" id="_renderDefinitionTable"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_renderDefinitionTable</span> (line <span class="line-number">159</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Renders a definition table</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_renderDefinitionTable
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$array</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$array</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_renderGlobalVariables" id="_renderGlobalVariables"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_renderGlobalVariables</span> (line <span class="line-number">123</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns rendered global variables</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_renderGlobalVariables
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="method_renderIdentity" id="_renderIdentity"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_renderIdentity</span> (line <span class="line-number">107</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a rendered identity</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_renderIdentity
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="method_renderRequest" id="_renderRequest"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_renderRequest</span> (line <span class="line-number">94</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a rendered request</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_renderRequest
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="method_renderStackTrace" id="_renderStackTrace"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_renderStackTrace</span> (line <span class="line-number">77</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a rendered stack trace</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_renderStackTrace
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 15 Sep 2011 15:50:22 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>

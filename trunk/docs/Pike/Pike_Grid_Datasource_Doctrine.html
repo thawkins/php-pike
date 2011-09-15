@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Pike_Grid_Datasource_Doctrine</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Pike_Grid_Datasource_Doctrine</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+                <p class="implements">
+            Implements interfaces:
+            <ul>
+                <li><a href="../Pike/Pike_Grid_Datasource_Interface.html">Pike_Grid_Datasource_Interface</a></li>            </ul>
+        </p>
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Datasource for Doctrine queries and entities. You can use this datasource with  Pike_Grid which will both create all neccasary javascript and JSON for drawing  a grid with JQgrid.</p>
+<p class="description"><p>Dependecies: jqGrid, Doctrine, Zend Framework</p></p>
+		<p class="notes">
+			Located in <a class="field" href="_Grid---Datasource---Doctrine.php.html">/Grid/Datasource/Doctrine.php</a> (line <span class="field"><a href="../__filesource/fsource_Pike__GridDatasourceDoctrine.php.html#a32">32</a></span>)
+		</p>
+		
+				
+		<pre><a href="../Pike/Pike_Grid_Datasource_Abstract.html">Pike_Grid_Datasource_Abstract</a>
+   |
+   --Pike_Grid_Datasource_Doctrine</pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+																																<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$_identifierColumn" title="details" class="var-name">$_identifierColumn</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">$_query</span>
+					<a href="#$_query" title="details" class="var-name">$_query</a>
+				</div>
+											</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																				
+												<div class="method-definition">
+											<span class="method-result">Pike_Grid_Datasource_Doctrine</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$source</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getDefaultSorting" title="details" class="method-name">getDefaultSorting</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getJSON" title="details" class="method-name">getJSON</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#setEventFilter" title="details" class="method-name">setEventFilter</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$function</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#setEventSort" title="details" class="method-name">setEventSort</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$function</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setIdentifierColumn" title="details" class="method-name">setIdentifierColumn</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$column</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$_identifierColumn" id="$_identifierColumn"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$_identifierColumn</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Pike__GridDatasourceDoctrine.php.html#a45">45</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">When this column is set it tells jqGrid how to identify each row</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_query" id="$_query"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">$_query</span>
+			<span class="var-name">$_query</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Pike__GridDatasourceDoctrine.php.html#a38">38</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">var:</span> Doctrine\ORM\Query</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+							<h4>Inherited Variables</h4>
+				<A NAME='inherited_vars'><!-- --></A>
+									<p>Inherited from <span class="classname"><a href="../Pike/Pike_Grid_Datasource_Abstract.html">Pike_Grid_Datasource_Abstract</a></span></p>
+					<blockquote>
+													<span class="var-title">
+								<span class="var-name"><a href="../Pike/Pike_Grid_Datasource_Abstract.html#var$columns">Pike_Grid_Datasource_Abstract::$columns</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../Pike/Pike_Grid_Datasource_Abstract.html#var$onFilter">Pike_Grid_Datasource_Abstract::$onFilter</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../Pike/Pike_Grid_Datasource_Abstract.html#var$onOrder">Pike_Grid_Datasource_Abstract::$onOrder</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../Pike/Pike_Grid_Datasource_Abstract.html#var$_data">Pike_Grid_Datasource_Abstract::$_data</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../Pike/Pike_Grid_Datasource_Abstract.html#var$_limitPerPage">Pike_Grid_Datasource_Abstract::$_limitPerPage</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../Pike/Pike_Grid_Datasource_Abstract.html#var$_params">Pike_Grid_Datasource_Abstract::$_params</a></span><br>
+							</span>
+											</blockquote> 
+										
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_Pike__GridDatasourceDoctrine.php.html#a47">47</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Pike_Grid_Datasource_Doctrine</span>
+		<span class="method-name">
+			__construct
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$source</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$source</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetDefaultSorting" id="getDefaultSorting"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getDefaultSorting</span> (line <span class="line-number"><a href="../__filesource/fsource_Pike__GridDatasourceDoctrine.php.html#a205">205</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Look if there is default sorting defined in the original query by asking the AST. Defining  default sorting is done outside the datasource where query or querybuilder object is defined.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getDefaultSorting
+		</span>
+				()
+			</div>
+	
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../Pike/Pike_Grid_Datasource_Interface.html#methodgetDefaultSorting">Pike_Grid_Datasource_Interface::getDefaultSorting()</a></dt>
+						<dd>Returns an array indicating on which field and which order the grid is by default sorted on.</dd>
+					</dl>
+			
+	</div>
+<a name="methodgetJSON" id="getJSON"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getJSON</span> (line <span class="line-number"><a href="../__filesource/fsource_Pike__GridDatasourceDoctrine.php.html#a312">312</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a JSON string useable for JQuery Grid. This grids interprets this  data and is able to draw a grid.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> JSON data</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getJSON
+		</span>
+				()
+			</div>
+	
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../Pike/Pike_Grid_Datasource_Interface.html#methodgetJSON">Pike_Grid_Datasource_Interface::getJSON()</a></dt>
+					</dl>
+			
+	</div>
+<a name="methodsetEventFilter" id="setEventFilter"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setEventFilter</span> (line <span class="line-number"><a href="../__filesource/fsource_Pike__GridDatasourceDoctrine.php.html#a194">194</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Defines what happends when the user filters data with jqGrid and send to the server. Must  return an array with query hints!</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			setEventFilter
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$function</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Closure</span>
+				<span class="var-name">$function</span>			</li>
+				</ul>
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../Pike/Pike_Grid_Datasource_Interface.html#methodsetEventFilter">Pike_Grid_Datasource_Interface::setEventFilter()</a></dt>
+						<dd>Defines what happends when the user filters data with jqGrid and send to the server. Return</dd>
+					</dl>
+			
+	</div>
+<a name="methodsetEventSort" id="setEventSort"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setEventSort</span> (line <span class="line-number"><a href="../__filesource/fsource_Pike__GridDatasourceDoctrine.php.html#a184">184</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Defines what happends when the grid is sorted by the server. Must return a array  with query hints!</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			setEventSort
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$function</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Closure</span>
+				<span class="var-name">$function</span>			</li>
+				</ul>
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../Pike/Pike_Grid_Datasource_Interface.html#methodsetEventSort">Pike_Grid_Datasource_Interface::setEventSort()</a></dt>
+						<dd>Defines what happends when the grid is sorted by the server. Return value depends on the  type of datasource.</dd>
+					</dl>
+			
+	</div>
+<a name="methodsetIdentifierColumn" id="setIdentifierColumn"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setIdentifierColumn</span> (line <span class="line-number"><a href="../__filesource/fsource_Pike__GridDatasourceDoctrine.php.html#a170">170</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets a column name which identifies every row in the grid.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setIdentifierColumn
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$column</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$column</span>			</li>
+				</ul>
+		
+			
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../Pike/Pike_Grid_Datasource_Abstract.html">Pike_Grid_Datasource_Abstract</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../Pike/Pike_Grid_Datasource_Abstract.html#methodsetParameters">Pike_Grid_Datasource_Abstract::setParameters()</a></span><br>
+													<span class="method-name"><a href="../Pike/Pike_Grid_Datasource_Abstract.html#methodsetResultsPerPage">Pike_Grid_Datasource_Abstract::setResultsPerPage()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Thu, 15 Sep 2011 16:07:46 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.3</a>
+	</p>
+	</div></body>
+</html>
