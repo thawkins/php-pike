@@ -69,3 +69,8 @@ p.intro {
     padding-bottom:10px;
     border-bottom:2px dotted #B9B9B9;
 }
+div.version {
+    font-style: italic;
+    font-weight: bold;
+    margin-bottom:10px;
+}
