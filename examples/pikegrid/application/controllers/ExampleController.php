@@ -280,7 +280,7 @@ class ExampleController extends Zend_Controller_Action
             $docBlock = $method->getDocblock();
 
             $this->view->intro = $docBlock->getShortDescription().$docBlock->getLongDescription();
-            $this->view->version = $docBlock->getTag('since');
+            $this->view->version = $docBlock->getTag('since')->getDescription();
         }
         
         $start = $method->getStartLine() -1;
