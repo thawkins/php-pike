@@ -35,8 +35,8 @@ class Pike_Grid_Datasource_Doctrine_Paginate
         $reflector = new ReflectionClass($query);
         $attribute = $reflector->getProperty('_paramTypes');
         $attribute->setAccessible(true);
-        $paramTypes = $attribute->getValue($query);        
-        
+        $paramTypes = $attribute->getValue($query);
+
         /* @var $countQuery Query */
         $countQuery = clone $query;
         $params = $query->getParameters();
@@ -44,7 +44,7 @@ class Pike_Grid_Datasource_Doctrine_Paginate
         $countQuery->setParameters($params, $paramTypes);
 
         return $countQuery;
-    } 
+    }
 
     /**
      * @param Query $query
@@ -59,10 +59,9 @@ class Pike_Grid_Datasource_Doctrine_Paginate
      * @param Query $query
      * @return int
      */
-    static public function getTotalQueryResults(Query $query)
+    static public function getTotalQueryResults(Query $query, array $hints = array())
     {
-        $q = self::createCountQuery($query);        
-        return $q->getSingleScalarResult();
+        return self::createCountQuery($query, $hints)->getSingleScalarResult();
     }
 
     /**
@@ -73,7 +72,7 @@ class Pike_Grid_Datasource_Doctrine_Paginate
      */
     static public function getPaginateQuery(Query $query, $offset, $itemCountPerPage, array $hints = array())
     {
-        $ids = array_map('current', self::createLimitSubQuery($query, $offset, $itemCountPerPage)->getScalarResult());
+        $ids = array_map('current', self::createLimitSubQuery($query, $offset, $itemCountPerPage, $hints)->getScalarResult());
 
         return self::createWhereInQuery($query, $ids, 'pgid', $hints);
     }
@@ -82,15 +81,23 @@ class Pike_Grid_Datasource_Doctrine_Paginate
      * @param Query $query
      * @return Query
      */
-    static public function createCountQuery(Query $query)
+    static public function createCountQuery(Query $query, array $hints = array())
     {
         /* @var $countQuery Query */
         $countQuery = self::cloneQuery($query);
 
-        $countQuery->setHint(Query::HINT_CUSTOM_TREE_WALKERS, array('Pike_Grid_Datasource_Doctrine_CountWalker'));
+        $hints = array_merge_recursive($hints, array(
+            Query::HINT_CUSTOM_TREE_WALKERS => array('Pike_Grid_Datasource_Doctrine_CountWalker')
+        ));
+
+        foreach($hints as $name=>$value)
+            $countQuery->setHint($name, $value);
+
+
         $countQuery->setFirstResult(null)->setMaxResults(null);
-        
+
         $countQuery->setParameters($query->getParameters());
+
         return $countQuery;
     }
 
@@ -100,13 +107,20 @@ class Pike_Grid_Datasource_Doctrine_Paginate
      * @param int $itemCountPerPage
      * @return Query
      */
-    static public function createLimitSubQuery(Query $query, $offset, $itemCountPerPage)
+    static public function createLimitSubQuery(Query $query, $offset, $itemCountPerPage, array $phints = array())
     {
         $subQuery = self::cloneQuery($query);
-        $subQuery->setHint(Query::HINT_CUSTOM_TREE_WALKERS, array('Pike_Grid_Datasource_Doctrine_LimitSubqueryWalker'))
-            ->setFirstResult($offset)
-            ->setMaxResults($itemCountPerPage);
-        $subQuery->setParameters($query->getParameters());
+
+        $hints = array();
+        $hints[Query::HINT_CUSTOM_TREE_WALKERS] = array('Pike_Grid_Datasource_Doctrine_LimitSubqueryWalker');
+        $hints = array_merge_recursive($phints, $hints);
+
+        foreach($hints as $name => $hint) $subQuery->setHint($name, $hint);
+
+        $subQuery->setFirstResult($offset)
+            ->setMaxResults($itemCountPerPage)
+            ->setParameters($query->getParameters());
+
         return $subQuery;
     }
 
@@ -119,23 +133,17 @@ class Pike_Grid_Datasource_Doctrine_Paginate
     static public function createWhereInQuery(Query $query, array $ids, $namespace = 'pgid', array $phints = array())
     {
         // don't do this for an empty id array
-        if (count($ids) > 0) {            
+        if (count($ids) > 0) {
             $whereInQuery = clone $query;
-            
+
             $whereInQuery->setParameters($query->getParameters());
-                    
+
             $hints = array();
             $hints[Query::HINT_CUSTOM_TREE_WALKERS] = array('Pike_Grid_Datasource_Doctrine_WhereInWalker');
             $hints['id.count'] = count($ids);
             $hints['pg.ns'] = $namespace;
-            
-            foreach($phints as $name => $hint) {
-                if($name == Query::HINT_CUSTOM_TREE_WALKERS) {
-                    $hints[Query::HINT_CUSTOM_TREE_WALKERS] = array_merge($hints[Query::HINT_CUSTOM_TREE_WALKERS], $hint);
-                } else  {
-                    $hints[$name] = $hint; 
-                }
-            }
+
+            $hints = array_merge_recursive($phints, $hints);
 
             foreach($hints as $name => $hint) $whereInQuery->setHint($name, $hint);
 
@@ -144,7 +152,7 @@ class Pike_Grid_Datasource_Doctrine_Paginate
                 $i = $i+1;
                 $whereInQuery->setParameter("{$namespace}_{$i}", $id);
             }
-            
+
             return $whereInQuery;
         } else {
             return $query;

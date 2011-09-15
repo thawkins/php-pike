@@ -22,40 +22,60 @@
  */
 
 /**
- * This interface should be implemented by datasources for usage in Pike_Grid
+ * Abstract version of the datasource. In his child is defined and retrieves data from
+ * the specified datasource for example Zend_Db, Doctrine2, etc.
  */
-interface Pike_Grid_Datasource_Interface
+class Pike_Grid_Datasource_Abstract
 {
-    /*
-     * Returns a JSON encoded string of the data to be send
-     */
-    public function getJSON();
 
     /**
-     * Returns an array indicating on which field and which order the grid is by default sorted on.
-     */
-    public function getDefaultSorting();
-
-    /**
-     * Set the jqGrid posted params
-     */
-    public function setParameters(array $params);
-
-    /**
-     * Specifies how many data is returned per 'page'
-     */
-    public function setResultsPerPage($num);
-
-    /**
-     * Defines what happends when the grid is sorted by the server. Return value depends on the
-     * type of datasource.
      *
+     * Event that fires on filtering
+     *
+     * @var Closesure
      */
-    public function setEventSort(Closure $function);
+    protected $onFilter;
+    /**
+     *
+     * Event that fires on ordering the grid
+     *
+     * @var type Closure
+     */
+    protected $onOrder;
+    /**
+     * Posted jqGrid params
+     *
+     * @var array
+     */
+    protected $_params = array();
+    protected $_limitPerPage = 50;
+    /**
+     * Array container where the actual grid data will be loaded in.
+     *
+     * @var array
+     */
+    protected $_data = array();
+    /**
+     *
+     * The columns 'container'
+     *
+     * @var Pike_Grid_Datasource_Columns
+     */
+    public $columns;
 
     /**
-     * Defines what happends when the user filters data with jqGrid and send to the server. Return
-     * value depends on the type of datasource
+     *
+     * Set the parameters which proberly come from jquery.
+     *
+     * @param array $params
      */
-    public function setEventFilter(Closure $function);
+    public function setParameters(array $params)
+    {
+        $this->_params = $params;
+    }
+
+    public function setResultsPerPage($num)
+    {
+        $this->_limitPerPage = (int) $num;
+    }
 }

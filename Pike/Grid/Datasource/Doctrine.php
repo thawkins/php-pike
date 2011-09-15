@@ -29,27 +29,13 @@
  * Dependecies: jqGrid, Doctrine, Zend Framework
  *
  */
-class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
+class Pike_Grid_Datasource_Doctrine extends Pike_Grid_Datasource_Abstract implements Pike_Grid_Datasource_Interface
 {
     /**
      *
-     * The columns 'container'
-     *
-     * @var Pike_Grid_Datasource_Columns
+     * @var $_query Doctrine\ORM\Query
      */
-    public $columns;
-
-    /**
-     * Array container where the actual grid data will be loaded in.
-     *
-     * @var array
-     */
-    protected $_data = array();
-
     protected $_query;
-
-    protected $_params = array();
-    protected $_limitPerPage = 50;
     
     /**
      * When this column is set it tells jqGrid how to identify each row
@@ -75,9 +61,44 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
                 break;
         }
 
-        $this->setColumns();
+        $this->_setColumns();
+        $this->_initEvents();
 
     }
+    
+    /**
+     * Initializes default behavior for sorting, filtering, etc.
+     * 
+     * @return void
+     */
+    private function _initEvents() {
+        $onOrder = function(array $params, Pike_Grid_Datasource_Interface $datasource) {
+            $columns = $datasource->columns->getColumns();
+            $sidx = $params['sidx'];
+            $sord = (in_array(strtoupper($params['sord']), array('ASC','DESC')) ? strtoupper($params['sord']) : 'ASC');
+
+            return array(
+                \Doctrine\ORM\Query::HINT_CUSTOM_TREE_WALKERS => array('Pike_Grid_Datasource_Doctrine_OrderByWalker'),
+                'sidx' => $sidx,
+                'sord' => $sord,
+            );
+        };
+
+        $this->onOrder = $onOrder;
+
+        $onFilter = function(array $params, Pike_Grid_Datasource_Interface $datasource) {
+            $filters = json_decode($params['filters']);
+
+            return array(
+                \Doctrine\ORM\Query::HINT_CUSTOM_TREE_WALKERS => array('Pike_Grid_Datasource_Doctrine_WhereLikeWalker'),
+                'operator' => $filters->groupOp,
+                'fields' => $filters->rules,
+            );
+        };
+
+        $this->onFilter = $onFilter;
+    }
+    
     /**
      *
      * Looks up in the AST what select expression we use and analyses which
@@ -86,7 +107,7 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
      *
      * @return array
      */
-    private function setColumns()
+    private function _setColumns()
     {
         $this->columns = new Pike_Grid_Datasource_Columns();
 
@@ -140,6 +161,12 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
         
     }
     
+    /**
+     *
+     * Sets a column name which identifies every row in the grid.
+     * 
+     * @param string $column 
+     */
     public function setIdentifierColumn($column) {
         if(isset($this->columns[$column])) {
             $this->_identifierColumn = $this->columns[$column];
@@ -148,6 +175,26 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
         }
     }
 
+    /**
+     * Defines what happends when the grid is sorted by the server. Must return a array
+     * with query hints!
+     *
+     * @return array
+     */
+    public function setEventSort(Closure $function) {
+        $this->onOrder = $function;
+    }
+
+    /**
+     * Defines what happends when the user filters data with jqGrid and send to the server. Must
+     * return an array with query hints!
+     *
+     * @return array
+     */
+    public function setEventFilter(Closure $function) {
+        $this->onFilter = $function;
+    }    
+    
     /**
      *
      * Look if there is default sorting defined in the original query by asking the AST. Defining
@@ -180,18 +227,81 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
 
     /**
      *
-     * Set the parameters which proberly come from jquery.
+     * Renders a single row and adds it to the internal data array
      *
-     * @param array $params
+     * @param array $row
+     * @return void
      */
-    public function setParameters(array $params) {
-        $this->_params = $params;
-    }
+    private function _renderRow($row) {
+        foreach($this->columns as $index=>$column) {
 
-    public function setResultsPerPage($num) {
-        $this->_limitPerPage = (int)$num;
-    }
+            if(array_key_exists('data', $column)) {
+                if(is_callable($column['data'])) {
+                    $row[$index] = $column['data']($row);
+                } else {
+                    array_walk($row, function($value, $key) use (&$column) {
+                        $column['data'] = str_replace('{' . strtolower($key) . '}', $value, $column['data']);
+                    });
 
+                    $row[$index] = $column['data'];
+                }
+            } elseif(array_key_exists($index, $row)) {
+                continue;
+            } else {
+                throw new Pike_Exception('Cannot render data for column '.$index);
+            }
+        }
+
+        /**
+         * Sort the row data specified by the column positions
+         */
+        $columns = $this->columns;
+
+        uksort($row, function($a, $b) use ($columns) {
+            if($columns[$a]['position'] > $columns[$b]['position']) {
+                return 1;
+            } elseif($columns[$a]['position'] < $columns[$b]['position']) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+
+        $record = array();
+        $record['cell'] = array_values($row);
+
+        if(null !== $this->_identifierColumn) {                
+            $record['id'] = $this->_identifierColumn['data']($row);
+        }
+
+        $this->_data['rows'][] = $record;
+    }    
+    
+    /**
+     *
+     * Get the initialized query hints based on the user-interface jqgrid parameters.
+     *
+     * @return array Doctrine compatible hints array
+     */
+    private function _getQueryHints() {
+        $hints = array();
+
+        /**
+         * Sorting if defined
+         */
+        if(array_key_exists('sidx', $this->_params) && strlen($this->_params['sidx']) > 0) {
+            $onSort = $this->onOrder;
+            $hints = array_merge_recursive($hints, $onSort($this->_params, $this));
+        }
+
+        if(array_key_exists('filters', $this->_params) && (array_key_exists('_search', $this->_params) && $this->_params['_search'] == true)) {
+            $onFilter = $this->onFilter;
+            $hints = array_merge_recursive($hints, $onFilter($this->_params, $this));
+        }
+
+        return $hints;
+    }    
+    
     /**
      *
      * Returns a JSON string useable for JQuery Grid. This grids interprets this
@@ -202,44 +312,10 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
     public function getJSON()
     {
         $offset = $this->_limitPerPage * ($this->_params['page'] - 1);
-        $hints = array();
+        $hints = $this->_getQueryHints();
 
-        $count = Pike_Grid_Datasource_Doctrine_Paginate::getTotalQueryResults($this->_query);
-
-        /**
-         * Sorting if defined
-         */
-        if(array_key_exists('sidx', $this->_params) && strlen($this->_params['sidx']) > 0) {
-            $columns = $this->columns->getColumns();
-            $sidx = $this->_params['sidx'];
-            $sord = (in_array(strtoupper($this->_params['sord']), array('ASC','DESC')) ? strtoupper($this->_params['sord']) : 'ASC');
-
-            //test if searchindex really is defined. (security)
-            $hasSidx = function() use($columns, $sidx) {
-              foreach($columns as $column) {
-                  if(!isset($column['index'])) return false;
-
-                  if($sidx == $column['index']) return true;
-              }
-
-              return false;
-            };
-            $hasSidx = $hasSidx();
-
-            if($hasSidx == false) {
-                if(isset($columns[$sidx]['index'])) {
-                    $hasSidx = true;
-                    $sidx = $columns[$sidx]['index'];
-                }
-            }
-
-            if($hasSidx) {
-                $hints[\Doctrine\ORM\Query::HINT_CUSTOM_TREE_WALKERS] = array('Pike_Grid_Datasource_Doctrine_OrderByWalker');
-                $hints['sidx'] =  $sidx;
-                $hints['sord'] = $sord;
-            }
-        }
-
+        $count = Pike_Grid_Datasource_Doctrine_Paginate::getTotalQueryResults($this->_query, $hints);
+        
         $paginateQuery = Pike_Grid_Datasource_Doctrine_Paginate::getPaginateQuery(
                 $this->_query,
                 $offset,
@@ -255,38 +331,8 @@ class Pike_Grid_Datasource_Doctrine implements Pike_Grid_Datasource_Interface
         $this->_data['records'] = $count;
         $this->_data['rows'] = array();
 
-        foreach($result as $row) {
-            foreach($this->columns as $index=>$column) {
-                if(is_callable($column['data'])) {
-                    $row[$index] = $column['data']($row);
-                } else {
-                    throw new Pike_Exception('Could not draw data for column ('.$index.')');
-                }
-            }
-            
-            /**
-             * Sort the row data specified by the column positions
-             */
-            $columns = $this->columns;
-            
-            uksort($row, function($a, $b) use ($columns) {
-                if($columns[$a]['position'] > $columns[$b]['position']) {
-                    return 1;
-                } elseif($columns[$a]['position'] < $columns[$b]['position']) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            });
-            
-            $record = array();
-            $record['cell'] = array_values($row);
-            
-            if(null !== $this->_identifierColumn) {                
-                $record['id'] = $this->_identifierColumn['data']($row);
-            }
-            
-            $this->_data['rows'][] = $record;
+        foreach($result as $row) {            
+            $this->_renderRow($row);           
         }
 
         return json_encode($this->_data);
